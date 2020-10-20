@@ -1,0 +1,16 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+df=pd.read_csv('./AI Mafia docs/linear regression/Assignment2/Train.csv')
+d=df.values
+X=d[:, [0,1,2,3,4]]
+Y=d[:, 5]
+X.reshape((-1,1))
+Y.reshape((-1,1))
+model = LinearRegression()
+model.fit(X,Y)
+df=pd.read_csv('./AI Mafia docs/linear regression/Assignment2/Test.csv')
+x=df.values
+y=model.predict(x)
+print(model.score(x,y))
