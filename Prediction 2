@@ -1,0 +1,61 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+df_x=pd.read_csv('./AI Mafia docs/linear regression/Assignment1/Linear_X_Train.csv')
+df_y=pd.read_csv('./AI Mafia docs/linear regression/Assignment1/Linear_Y_Train.csv')
+x=df_x.values.reshape((-1,))
+y=df_y.values.reshape((-1,))
+print(x.shape)
+print(y.shape)
+plt.scatter(x,y)
+plt.show()
+X=x
+Y=(y-y.mean())/y.std()
+plt.scatter(X,Y,color="green")
+plt.show()
+print (X)
+print(Y)
+def hypothesis(x,theta):
+    return theta[0]+theta[1]*x
+def error(X,Y,theta):
+    error=0
+    for i in range(X.shape[0]):
+        h=hypothesis(X[i],theta)
+        error+=(h-Y[i])**2
+    return 0.5*error
+def updation(X,Y,theta):
+    update=np.zeros(2)
+    for i in range(X.shape[0]):
+        h=hypothesis(X[i],theta)
+        update[0]+=(h-Y[i])
+        update[1]+=(h-Y[i])*X[i]
+    return update
+def gradientDescent(X,Y):
+    learningrate=0.000001
+    error_list=[]
+    theta=np.array([4.0,-2.0])
+    itr=0
+    max_iteration=X.shape[0]//2
+    while(itr<=max_iteration):
+        err=error(X,Y,theta)
+        error_list.append(err)
+        upd=updation(X,Y,theta)
+        c0=learningrate*upd[0]
+        c1=learningrate*upd[1]
+        theta[0]-=c0
+        theta[1]-=c1
+        itr+=1
+    return theta,error_list
+
+finaltheta, errors=gradientDescent(X,Y)
+print(errors)
+plt.plot(errors)
+plt.show()
+print(finaltheta)
+test=pd.read_csv('./AI Mafia docs/linear regression/Assignment1/Linear_X_Test.csv')
+testx=test.values.flatten()
+print(testx)
+plt.scatter(X,Y,label="Training Data")
+plt.plot(testx,hypothesis(testx,finaltheta),color="red",label="Predicted Data")
+plt.legend()
+plt.show()
